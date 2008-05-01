@@ -7,5 +7,5 @@ class puppet {
         mode => 644
     }
 
-    service { puppetd: ensure => running }
+    service { puppet: ensure => running }
 }
