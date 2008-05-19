@@ -1,9 +1,29 @@
 #######################################
 # puppet module
-# Puzzle ITC - haerry+puppet(at)puzzle.ch
-# GPLv3
+# original by luke kanies
+# http://github.com/lak
+# adaapted by puzzel itc
 #######################################
+class puppet {
+    file { "/etc/puppet/puppet.conf":
+        # That's a lot of puppets!
+        source => "puppet:///puppet/puppet.conf",
+        owner => root,
+        group => root,
+        mode => 644
+    }
 
+    file { "/etc/puppet/namespaceauth.conf":
+        # That's a lot of puppets!
+        source => "puppet:///puppet/namespaceauth.conf",
+        owner => root,
+        group => root,
+        mode => 644
+    }
 
-# modules_dir { "puppet": }
-class puppet {}
+    service { puppet:
+        ensure => running,
+        pattern => puppetd,
+        require => [File["/etc/puppet/namespaceauth.conf"], File["/etc/puppet/puppet.conf"]]
+    }
+}
