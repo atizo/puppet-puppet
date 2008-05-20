@@ -41,7 +41,7 @@ class puppet::puppetmaster::linux inherits puppet::linux {
 
     service{'puppetmaster':
         ensure => running,
-        require => Package[puppet],
+        require => [ Package[puppet] ],
     }
     
     Service[puppet]{
