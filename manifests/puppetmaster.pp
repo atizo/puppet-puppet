@@ -25,7 +25,7 @@ class puppet::puppetmaster inherits puppet {
         owner => root, group => 0, mode => 600;
     }
 
-    if tagged(puppetmaster_storeconfigs) {
+    if $puppetmaster_storeconfigs {
         include puppet::puppetmaster::storeconfigs
     }
 
