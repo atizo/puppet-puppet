@@ -112,7 +112,7 @@ define puppet::puppetmaster::hasdb::mysql(
     $dbpwd,
     $dbconnectinghost = 'locahost'
 ){
-    @@mysql_db{$dbname: 
+    @@mysql_database{$dbname: 
         tag => "mysql_${dbhostfqdn}",
     }
 
