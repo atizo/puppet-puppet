@@ -3,8 +3,13 @@
 import "storeconfigs.pp"
 
 class puppet::puppetmaster inherits puppet {
-    case $kernel {
-        linux: { include puppet::puppetmaster::linux }
+    case $operatingsystem {
+        centos,debian, redhat: { include puppet::puppetmaster::package }
+        default: {
+            case $kernel {
+                linux: { include puppet::puppetmaster::linux }
+            }
+        }
     }
 
     File[puppet_config]{
@@ -47,16 +52,13 @@ class puppet::puppetmaster::linux inherits puppet::linux {
     Service[puppet]{
         require +> Service[puppetmaster], 
     }
+}
 
-    case $operatingsystem {
-        gentoo: { info("no need to install an additional server package") }
-        default: {
-            package { puppet-server: ensure => present }
+class puppet::puppetmaster::package inherits puppet::puppetmaster::linux {
+    package { puppet-server: ensure => present }
 
-            Service[puppetmaster]{
-                require +> Package[puppet-server],
-            }
-        }
+    Service[puppetmaster]{
+        require +> Package[puppet-server],
     }
 }
 
