@@ -118,7 +118,7 @@ define puppet::puppetmaster::hasdb::mysql(
 
     @@mysql_user{"${dbuser}@$${dbconnectinghost}":
         password_hash => mysql_password("$dbpwd"),
-        require => Mysql_db[$dbname],    
+        require => Mysql_database[$dbname],    
         tag => "mysql_${dbhostfqdn}",
     }
 
