@@ -97,7 +97,7 @@ define puppet::puppetmaster::hasdb(
     }
 
     case $dbtype {
-        'mysql': puppet::puppetmaster::hasdb::mysql{$name: dbname => $dbname, dbhost => $dbhost, dbuser => $dbuser, dbpwd => $dbpwd, }
+        'mysql': {  puppet::puppetmaster::hasdb::mysql{$name: dbname => $dbname, dbhost => $dbhost, dbuser => $dbuser, dbpwd => $dbpwd, } }
     }
 }
 
