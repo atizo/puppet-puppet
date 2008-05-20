@@ -33,7 +33,7 @@ class puppet::puppetmaster inherits puppet {
     file{'/etc/cron.d/puppetmaster.cron':
         source => [ "puppet://$server/puppet/cron.d/puppetmaster.${operatingsystem}",
                     "puppet://$server/puppet/cron.d/puppetmaster" ],
-        owner => root, group => 0, mode = 0644;
+        owner => root, group => 0, mode => 0644;
     }
 }
 
