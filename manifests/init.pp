@@ -57,6 +57,7 @@ class puppet::linux {
         ensure => running,
         enable => true,
         hasstatus => true,
+        pattern => puppetd,
         require => Package[puppet],
     }
 
