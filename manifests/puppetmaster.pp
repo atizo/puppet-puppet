@@ -4,7 +4,8 @@ import "storeconfigs.pp"
 
 class puppet::puppetmaster inherits puppet {
     case $operatingsystem {
-        centos,debian, redhat: { include puppet::puppetmaster::package }
+        debian: { include puppet::puppetmaster::package }
+        centos: { include puppet::puppetmaster::centos }
         default: {
             case $kernel {
                 linux: { include puppet::puppetmaster::linux }
@@ -24,7 +25,8 @@ class puppet::puppetmaster inherits puppet {
     }
 
     file { "$real_puppet_fileserverconfig":
-        source => [ "puppet://$server/files/puppet/master/fileserver.conf",
+        source => [ "puppet://$server/files/puppet/master/${fqdn}/fileserver.conf",
+                    "puppet://$server/files/puppet/master/fileserver.conf",
                     "puppet://$server/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
         owner => root, group => 0, mode => 600;
@@ -39,48 +41,6 @@ class puppet::puppetmaster inherits puppet {
         source => [ "puppet://$server/puppet/cron.d/puppetmaster.${operatingsystem}",
                     "puppet://$server/puppet/cron.d/puppetmaster" ],
         owner => root, group => 0, mode => 0644;
-    }
-}
-
-class puppet::puppetmaster::linux inherits puppet::linux {
-
-    service{'puppetmaster':
-        ensure => running,
-        enable => true,
-        require => [ Package[puppet] ],
-    }
-    
-    Service[puppet]{
-        require +> Service[puppetmaster], 
-    }
-}
-
-class puppet::puppetmaster::package inherits puppet::puppetmaster::linux {
-    package { puppet-server: ensure => present }
-
-    Service[puppetmaster]{
-        require +> Package[puppet-server],
-    }
-}
-
-class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
-    include mongrel, nginx
-
-    Service[puppetmaster]{
-        require +> Service[ngnix],
-    }
-
-    File[puppet_config] {
-        require => [ Package[mongrel], Package[nginx], File[nginx_config] ],
-    }
-
-    case $operatingsystem {
-        gentoo, centos: {
-            file{"/etc/init.d/puppetmaster":
-                source => "puppet://$server/puppet/init.d/puppetmaster.${operatingsystem}",        
-                owner => root, group => 0, mode => 0755; 
-            }
-        }
     }
 }
 
@@ -111,22 +71,22 @@ define puppet::puppetmaster::hasdb::mysql(
     $dbhostfqdn = "${fqdn}",
     $dbuser = 'puppet',
     $dbpwd,
-    $dbconnectinghost = 'locahost'
+    $dbconnectinghost = 'localhost'
 ){
     @@mysql_database{$dbname: 
         tag => "mysql_${dbhostfqdn}",
     }
 
-    @@mysql_user{"${dbuser}@$${dbconnectinghost}":
+    @@mysql_user{"${dbuser}@${dbconnectinghost}":
         password_hash => mysql_password("$dbpwd"),
         require => Mysql_database[$dbname],    
         tag => "mysql_${dbhostfqdn}",
     }
 
 
-    @@mysql_grant{"${dbuser}@$${dbconnectinghost}/${dbname}":
+    @@mysql_grant{"${dbuser}@${dbconnectinghost}/${dbname}":
         privileges => all,
-        require => Mysql_user['munin@localhost'],
+        require => Mysql_user["${dbuser}@${dbconnectinghost}"],
         tag => "mysql_${dbhostfqdn}",
     }
 }

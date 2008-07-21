@@ -21,6 +21,8 @@ class puppet {
     case $kernel {
         linux: { case $operatingsystem {
                     gentoo:  { include puppet::gentoo }
+                    centos:  { include puppet::centos }
+                    debian:  { include puppet::debian }
                     default: { include puppet::linux}
                  }
         }
@@ -45,11 +47,8 @@ class puppet {
 }
 
 class puppet::linux {
-    package{'puppet':
-        ensure => present,
-    }
-
-    package{'facter':
+    # package bc needed for cron
+    package{ [ 'puppet', 'facter', 'bc' ]:
         ensure => present,
     }
 
@@ -57,6 +56,7 @@ class puppet::linux {
         ensure => running,
         enable => true,
         hasstatus => true,
+        hasrestart => true,
         pattern => puppetd,
         require => Package[puppet],
     }
@@ -79,6 +79,24 @@ class puppet::gentoo inherits puppet::linux {
         hasstatus => false,
     }
 }
+class puppet::debian inherits puppet::linux {
+    # there is really no status cmd for it
+    Service[puppet]{
+        hasstatus => false,
+    }
+}
+
+
+class puppet::centos inherits puppet::linux {
+    file{'/etc/sysconfig/puppet':
+        source => [ "puppet://$server/files/puppet/sysconfig/${fqdn}/puppet",
+                    "puppet://$server/files/puppet/sysconfig/${domain}/puppet",
+                    "puppet://$server/files/puppet/sysconfig/puppet",
+                    "puppet://$server/puppet/sysconfig/puppet" ],
+        notify => Service[puppet],
+        owner => root, group => 0, mode => 0644;
+    }
+}
 class puppet::openbsd {
     service{'puppet':
         provider => base,
@@ -86,5 +104,3 @@ class puppet::openbsd {
         ensure => running,
     }
 }
-
-
