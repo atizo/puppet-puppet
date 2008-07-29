@@ -23,7 +23,7 @@ fi
 PUPPETMASTER_OPTS=""
 [ -n "$PUPPETMASTER_PID_DIR" ] || PUPPETMASTER_PID_DIR="/var/run/puppet/"
 [ -n "$PUPPETMASTER_MANIFEST" ] && PUPPETMASTER_OPTS="--manifest=${PUPPETMASTER_MANIFEST}"
-[ -n "$PUPPETMASTER_PORTS" ] && PUPPETMASTER_OPTS="$PUPPETMASTER_OPTS --servertype=mongrel"
+[ -n "$PUPPETMASTER_PORTS" ] && [ ${#PUPPETMASTER_PORTS[@]} -gt 1 ] && PUPPETMASTER_OPTS="$PUPPETMASTER_OPTS --servertype=mongrel"
 [ -n "$PUPPETMASTER_LOG" ] && PUPPETMASTER_OPTS="${PUPPETMASTER_OPTS} --logdest=${PUPPETMASTER_LOG}"
 PUPPETMASTER_OPTS="${PUPPETMASTER_OPTS} \
 	${PUPPETMASTER_EXTRA_OPTS}"
@@ -38,7 +38,7 @@ start() {
 
 	# Confirm the manifest exists
 	if [ -r $PUPPETMASTER_MANIFEST ]; then
-        if [ -n "$PUPPETMASTER_PORTS" ]; then
+        if [ -n "$PUPPETMASTER_PORTS" ] && [ ${#PUPPETMASTER_PORTS[@]} -gt 1 ]; then
             echo -n " (port "
             for ((i=0; i<${#PUPPETMASTER_PORTS[@]}; i++)); do
                 echo -n "${PUPPETMASTER_PORTS[$i]}"
@@ -62,7 +62,7 @@ start() {
 
 stop() {
 	echo -n  $"Stopping puppetmaster: "
-    if [ -n "$PUPPETMASTER_PORTS" ]; then
+    if [ -n "$PUPPETMASTER_PORTS" ] && [ ${#PUPPETMASTER_PORTS[@]} -gt 1 ]; then
         echo -n " (port "
         for ((i=0; i<${#PUPPETMASTER_PORTS[@]}; i++)); do
             echo -n "${PUPPETMASTER_PORTS[$i]}"
