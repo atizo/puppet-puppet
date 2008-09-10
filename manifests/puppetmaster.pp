@@ -92,6 +92,6 @@ define puppet::puppetmaster::hasdb::mysql(
 
     munin::plugin::deploy{'puppetresources':
         source => "puppet/munin/puppetresources.mysql",
-        config => "env.mysqlopts --username=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",
+        config => "env.mysqlopts --user=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",
     }
 }
