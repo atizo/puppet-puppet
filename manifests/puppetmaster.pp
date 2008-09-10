@@ -89,4 +89,9 @@ define puppet::puppetmaster::hasdb::mysql(
         require => Mysql_user["${dbuser}@${dbconnectinghost}"],
         tag => "mysql_${dbhostfqdn}",
     }
+
+    munin::plugin::deploy{'puppetresources':
+        source => "puppet://$server/puppet/munin/puppetresources.mysql",
+        config => "env.mysqlopts --username=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",
+    }
 }
