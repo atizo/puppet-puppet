@@ -3,6 +3,9 @@
 # modules/puppet/manifests/init.pp - manage puppet stuff
 # original by luke kanies
 # http://github.com/lak
+# adapted by puzzle itc
+# merged with immerda project group's
+# solution
 #
 # Copyright 2008, admin(at)immerda.ch
 # Copyright 2008, Puzzle ITC GmbH
@@ -19,16 +22,21 @@
 
 class puppet {
     case $kernel {
-        linux: { case $operatingsystem {
-                    gentoo:  { include puppet::gentoo }
-                    centos:  { include puppet::centos }
-                    debian:  { include puppet::debian }
-                    default: { include puppet::linux}
-                 }
+        linux: { 
+            case $operatingsystem {
+                gentoo:  { include puppet::gentoo }
+                centos:  { include puppet::centos }
+                debian:  { include puppet::debian }
+                default: { include puppet::linux}
+            }
         }
-        openbsd: { include puppet::openbsd}
+        openbsd: { include puppet::openbsd }
+        default: { include puppet::base }
     }
 
+}
+
+class puppet::base {
     $real_puppet_config = $puppet_config ? {
         '' => "/etc/puppet/puppet.conf",
         default => $puppet_config,
@@ -44,24 +52,27 @@ class puppet {
         notify => Service[puppet],
         owner => root, group => 0, mode => 600;
     }
-}
-
-class puppet::linux {
-    package{ [ 'puppet', 'facter' ]:
-        ensure => present,
-    }
-
-    # package bc needed for cron
-    include bc
-
     service{'puppet':
         ensure => running,
         enable => true,
         hasstatus => true,
         hasrestart => true,
         pattern => puppetd,
+    }
+
+}
+
+class puppet::linux inherits puppet::base {
+    package{ [ 'puppet', 'facter' ]:
+        ensure => present,
+    }
+
+    # package bc needed for cron
+    include bc
+    Service['puppet']{
         require => Package[puppet],
     }
+
 
     file{'/etc/cron.d/puppetd.cron':
         source => [ "puppet://$server/puppet/cron.d/puppetd.${operatingsystem}",
@@ -93,6 +104,9 @@ class puppet::debian inherits puppet::linux {
     Service[puppet]{
         hasstatus => false,
     }
+    File['/etc/cron.d/puppetd.cron']{
+        path => '/etc/cron.d/puppetd',
+    }
 }
 
 class puppet::centos inherits puppet::linux {
@@ -105,10 +119,26 @@ class puppet::centos inherits puppet::linux {
         owner => root, group => 0, mode => 0644;
     }
 }
-class puppet::openbsd {
-    service{'puppet':
-        provider => base,
-        pattern => puppetd,
-        ensure => running,
+class puppet::openbsd inherits puppet::base {
+    Service['puppet']{
+        restart => '/bin/kill -HUP `/bin/cat /var/run/puppet/puppetd.pid`',
+        stop => '/bin/kill `/bin/cat /var/run/puppet/puppetd.pid`',
+        start => '/usr/local/bin/puppetd',
+        hasstatus => false,
+        hasrestart => false,
     }
+    openbsd::add_to_rc_local{'puppetd':
+        binary => '/usr/local/bin/puppetd',
+    }
+    cron { 'puppetd_check':
+        command => '/bin/ps ax | /usr/bin/grep -v grep | /usr/bin/grep -q puppetd || (sleep `echo $RANDOM/2000*60 | bc` && /usr/local/bin/puppetd)',
+        user => root,
+        minute => 0,
+    }
+    cron { 'puppetd_restart':
+        command => 'sleep `echo $RANDOM/2000*60 | bc` && /bin/kill `/bin/cat /var/run/puppet/puppetd.pid`; /usr/local/bin/puppetd',
+        minute => 0,
+        hour => 22,
+        monthday => '*/2',
+    } 
 }
