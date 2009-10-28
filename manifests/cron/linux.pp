@@ -1,8 +1,8 @@
-# manifests/cron/linux.pp 
 class puppet::cron::linux inherits puppet::linux {
     include puppet::cron::base
-    case $puppet_config {
-        '': { $puppet_config = '/etc/puppet/puppet.conf' }
+
+    if ! $puppet_config {
+        $puppet_config = '/etc/puppet/puppet.conf'
     }
     File['/etc/cron.d/puppetd.cron']{
         source => undef,

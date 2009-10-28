@@ -5,9 +5,9 @@ class puppet::base {
     file {'puppet_config':
         path => "$puppet_config",
         source => [
-            "puppet://$server/files/puppet/client/${fqdn}/puppet.conf",
-            "puppet://$server/files/puppet/client/puppet.conf.$operatingsystem",
-            "puppet://$server/files/puppet/client/puppet.conf",
+            "puppet://$server/site-puppet/client/${fqdn}/puppet.conf",
+            "puppet://$server/site-puppet/client/puppet.conf.$operatingsystem",
+            "puppet://$server/site-puppet/client/puppet.conf",
             "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
             "puppet://$server/puppet/client/puppet.conf"
         ],

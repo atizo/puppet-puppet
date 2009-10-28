@@ -1,6 +1,6 @@
 class puppet::puppetmaster::checklastrun {
     file{'/opt/bin/puppetlast':
-        source => [ "puppet://$server/files/puppet/master/puppetlast",
+        source => [ "puppet://$server/site-puppet/master/puppetlast",
                     "puppet://$server/puppet/master/puppetlast"],
         owner => root, group => 0, mode => 0700;
     }
