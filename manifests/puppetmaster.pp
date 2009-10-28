@@ -1,4 +1,3 @@
-# manifests/puppetmaster.pp
 class puppet::puppetmaster inherits puppet {
     case $operatingsystem {
         debian: { include puppet::puppetmaster::package }
@@ -9,11 +8,11 @@ class puppet::puppetmaster inherits puppet {
             }
         }
     }
-    include puppet::puppetmaster::base
 
+    include puppet::puppetmaster::base
     include puppet::puppetmaster::checklastrun
 
-  if $use_shorewall {
-    include shorewall::rules::puppet::master
-  }
+    if $use_shorewall {
+        include shorewall::rules::puppet::master
+    }
 }
