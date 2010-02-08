@@ -13,7 +13,4 @@ class puppet::base::linux::debian inherits puppet::base::linux {
     Service['puppet']{
         hasstatus => false,
     }
-    File['/etc/cron.d/puppetd.cron']{
-        path => '/etc/cron.d/puppetd',
-    }
 }

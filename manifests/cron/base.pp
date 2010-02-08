@@ -1,6 +1,4 @@
-# manifests/cron/base.pp
-
-class puppet::cron::base inherits puppet::base {
+class puppet::cron::base inherits puppet::cron {
     Service['puppet']{
         enable => false,
         hasstatus => false,
