@@ -22,16 +22,15 @@ class puppet {
     case $kernel {
         linux: { 
             case $operatingsystem {
-                gentoo:  { include puppet::gentoo }
-                centos:  { include puppet::centos }
-                debian:  { include puppet::debian }
-                default: { include puppet::linux}
+                gentoo:  { include puppet::base::linux::gentoo }
+                centos:  { include puppet::base::linux::centos }
+                debian:  { include puppet::base::linux::debian }
+                default: { include puppet::base::linux }
             }
         }
-        openbsd: { include puppet::openbsd }
+        openbsd: { include puppet::base::openbsd }
         default: { include puppet::base }
     }
-
     if $use_shorewall {
       include shorewall::rules::out::puppet
     }
