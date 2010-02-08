@@ -2,9 +2,6 @@ class puppet::puppetmaster::base inherits puppet::puppetmaster {
     if ! $puppet_fileserverconfig {
         $puppet_fileserverconfig = '/etc/puppet/fileserver.conf'
     }
-    if $puppetmaster_storeconfigs {
-        include puppet::puppetmaster::storeconfigs
-    }
     package{'puppet-server':
         ensure => present,
     }
