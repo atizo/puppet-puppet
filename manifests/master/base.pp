@@ -53,4 +53,3 @@ class puppet::master::base inherits puppet::base{
         owner => root, group => 0, mode => 0700;
     }
 }
-~ 
