@@ -18,7 +18,7 @@ define puppet::master::database(
     $dbname = 'puppet',
     $host = 'localhost',
     $user = 'puppet',
-    $password,
+    $password
 ){
     include puppet::master
     mysql_database{$dbname: }
