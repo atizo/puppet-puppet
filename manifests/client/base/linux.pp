@@ -1,19 +1,16 @@
-# Class: puppet::base::linux
+# Class: puppet::client::base::linux
 #
-# This class inherits basic puppet settings 
+# Inherits basic puppetclient configuration and overrides linux spcific settings.
 #
 # Parameters:
 #
 # Actions:
-#   Install the default set of users: [dana,fox]
 #
 # Requires:
-#   - Package["zsh"]
 #
 # Sample Usage:
 #
-
-class puppet::base::linux inherits puppet::base {
+class puppet::client::base::linux inherits puppet::client::base {
     package{ [ 'puppet', 'facter' ]:
         ensure => present,
     }

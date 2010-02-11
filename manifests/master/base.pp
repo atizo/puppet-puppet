@@ -1,4 +1,18 @@
-class puppet::puppetmaster::base inherits puppet::puppetmaster {
+# Class: puppet::master::base.pp
+#
+# This is an abstract class which holds basic puppetmaster resources.
+# It adds server functionality from the puppet:base.pp class
+# It is plattform independent.  
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
+class puppet::master::base inherits puppet::base{
     if ! $puppet_fileserverconfig {
         $puppet_fileserverconfig = '/etc/puppet/fileserver.conf'
     }
@@ -15,10 +29,7 @@ class puppet::puppetmaster::base inherits puppet::puppetmaster {
             "puppet://$server/site-puppet/master/puppet.conf",
             "puppet://$server/puppet/master/puppet.conf",
         ],
-        notify => [
-            Service['puppet'],
-            Service['puppetmaster']
-        ],
+        notify +> Service['puppetmaster'],
     }
     file{$puppet_fileserverconfig:
         source => [
@@ -26,10 +37,7 @@ class puppet::puppetmaster::base inherits puppet::puppetmaster {
             "puppet://$server/site-puppet/master/fileserver.conf",
             "puppet://$server/puppet/master/fileserver.conf",
         ],
-        notify => [
-            Service['puppet'],
-            Service['puppetmaster'],
-        ],
+        notify => Service['puppetmaster'],
         owner => root, group => 0, mode => 600;
     }
     # restart the master from time to time to avoid memory problems
@@ -45,3 +53,4 @@ class puppet::puppetmaster::base inherits puppet::puppetmaster {
         owner => root, group => 0, mode => 0700;
     }
 }
+~ 

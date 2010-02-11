@@ -1,4 +1,19 @@
-class puppet::cron::base::openbsd inherits puppet::cron::base {
+# Class: puppet::client::cron::base::linux
+#
+# This class includes plattform independend configuration and
+# adds / overrides openbsd specific stuff
+# For doing these overrides it has to inheret from client::base::openbsd
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
+class puppet::client::cron::base::openbsd inherits puppet::client::base::openbsd {
+    include puppet::client::cron::base
     Openbsd::Rc_local['puppetd']{
         ensure => 'absent',
     }
@@ -14,3 +29,4 @@ class puppet::cron::base::openbsd inherits puppet::cron::base {
         minute => [0,30],
     }
 }
+

@@ -1,4 +1,17 @@
-class puppet::base::linux::debian inherits puppet::base::linux {
+# Class: puppet::client::base::linux::debian
+#
+# This class inherits linux specific puppetclient configuration
+# and adds debian specific stuff
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
+class puppet::client::base::linux::debian inherits puppet::client::base::linux {
     file{'/etc/default/puppet':
         source => [
             "puppet://$server/site-puppet/client/debian/${fqdn}/puppet",
@@ -14,3 +27,4 @@ class puppet::base::linux::debian inherits puppet::base::linux {
         hasstatus => false,
     }
 }
+

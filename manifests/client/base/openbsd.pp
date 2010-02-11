@@ -1,4 +1,16 @@
-class puppet::base::openbsd inherits puppet::base {
+# Class: puppet::client::base::openbsd
+#
+# Inherits basic puppetclient configuration and overrides openbsd spcific settings.
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
+class puppet::client::base::openbsd inherits puppet::client::base {
     Service['puppet']{
         restart => '/bin/kill -HUP `/bin/cat /var/run/puppet/puppetd.pid`',
         stop => '/bin/kill `/bin/cat /var/run/puppet/puppetd.pid`',
@@ -19,5 +31,6 @@ class puppet::base::openbsd inherits puppet::base {
         minute => 0,
         hour => 22,
         monthday => '*/2',
-    } 
+    }
 }
+
