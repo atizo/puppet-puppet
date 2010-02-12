@@ -3,7 +3,7 @@
 # Based on the operationsystem - fact , this class includes the appropriate 
 # puppetmaster functionality. 
 # It configures just the basic settings. Additional functions like database,
-# lastruncheck or storeconfig has to be included separately
+# lastruncheck or storeconfig has to be included separately 
 #
 # Parameters:
 #
@@ -12,7 +12,7 @@
 # Requires:
 #
 # Sample Usage:
-#
+#  
 class puppet::master {
     case $operatingsystem {
         centos: { include puppet::master::base::centos }
