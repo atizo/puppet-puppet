@@ -1,7 +1,7 @@
 # Class: base
 #
 # This is an abstract class which holds basic resources that are in common
-# with puppetmaster and puppetclient. do not include this class directly.
+# with puppetmaster and puppetclient. do not include this class directly. 
 #
 # Actions:
 #
