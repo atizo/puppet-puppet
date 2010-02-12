@@ -22,7 +22,7 @@ class puppet::base {
             "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
             "puppet://$server/puppet/client/puppet.conf"
         ],
-        owner => root, group => 0, mode => 600;
+        owner => root, group => 0, mode => 644;
     }
 }
 

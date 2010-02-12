@@ -28,7 +28,7 @@ define puppet::master::database(
     }
     mysql_grant{"$user}@$host/$dbname":
         privileges => all,
-        require => Mysql_user["$dbuser@$host"],
+        require => Mysql_user["$user@$host"],
     }
     munin::plugin::deploy{'puppetresources':
         source => "puppet/munin/puppetresources.mysql",

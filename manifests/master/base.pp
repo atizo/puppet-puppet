@@ -37,8 +37,8 @@ class puppet::master::base inherits puppet::base{
             "puppet://$server/site-puppet/master/fileserver.conf",
             "puppet://$server/puppet/master/fileserver.conf",
         ],
-        notify => Service['puppetmaster'],
-        owner => root, group => 0, mode => 600;
+        #notify => Service['puppetmaster'],
+        owner => root, group => 0, mode => 644;
     }
     # restart the master from time to time to avoid memory problems
     file{'/etc/cron.d/puppetmaster.cron':

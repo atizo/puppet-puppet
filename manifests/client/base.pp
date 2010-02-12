@@ -20,7 +20,7 @@ class puppet::client::base inherits puppet::base {
         pattern => puppetd,
     }
     File['puppet_config']{
-#        notify +> Service['puppet'],
+        notify => Service['puppet'],
     }
 
 }
