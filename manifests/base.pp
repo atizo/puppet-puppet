@@ -8,7 +8,7 @@
 # Requires:
 #
 # Sample Usage:
-#
+# 
 class puppet::base {
     if ! $puppet_config {
         $puppet_config = '/etc/puppet/puppet.conf'
