@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+`/usr/share/puppet/ext/puppetlast`.each do |host|
+  puts host if host[/.*checked in (\d+) minutes ago$/, 1].to_i > 3600
+end
