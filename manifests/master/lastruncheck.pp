@@ -12,7 +12,7 @@
 #
 class puppet::master::lastruncheck {
     include puppet::master
-    ifile{'/usr/local/sbin/lastruncheck':
+    file{'/usr/local/sbin/lastruncheck':
         source => "puppet://$server/modules/puppet/master/lastruncheck"
         owner => root, group => 0, mode => 0644;
     }
