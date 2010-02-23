@@ -13,7 +13,7 @@
 class puppet::master::lastruncheck {
     include puppet::master
     file{'/usr/local/sbin/lastruncheck':
-        source => "puppet://$server/modules/puppet/master/lastruncheck"
+        source => "puppet://$server/modules/puppet/master/lastruncheck",
         owner => root, group => 0, mode => 0644;
     }
     file{'/etc/cron.d/puppetlast.cron':
