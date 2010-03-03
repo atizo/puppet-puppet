@@ -30,8 +30,8 @@ define puppet::master::database(
         privileges => all,
         require => Mysql_user["$user@$host"],
     }
-    munin::plugin::deploy{'puppetresources':
-        source => "puppet/munin/puppetresources.mysql",
-        config => "env.mysqlopts --user=$user --password=$password -h $host\nenv.puppetdb $dbname",
-    }
+    #munin::plugin::deploy{'puppetresources':
+    #    source => "puppet/munin/puppetresources.mysql",
+    #    config => "env.mysqlopts --user=$user --password=$password -h $host\nenv.puppetdb $dbname",
+    #}
 }
