@@ -1,15 +1,6 @@
-# Class: puppet::client::base::linux::debian
 #
 # This class inherits linux specific puppetclient configuration
 # and adds debian specific stuff
-#
-# Parameters:
-#
-# Actions:
-#
-# Requires:
-#
-# Sample Usage:
 #
 class puppet::client::base::linux::debian inherits puppet::client::base::linux {
     file{'/etc/default/puppet':

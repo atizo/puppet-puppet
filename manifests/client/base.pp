@@ -1,14 +1,7 @@
-# Class: client::base
 #
 # This is an abstract class which holds basic resources for the puppetclient.
 # It also inherits puppet's base functionality (puppet::base)
 # Do not include this class directly.
-#
-# Actions:
-#
-# Requires:
-#
-# Sample Usage:
 #
 class puppet::client::base inherits puppet::base {
     include puppet::base
@@ -22,5 +15,12 @@ class puppet::client::base inherits puppet::base {
     File['puppet_config']{
         notify => Service['puppet'],
     }
-
+    # restart the client from time to time to avoid memory problems
+    file{'/etc/cron.d/puppetd':
+        source => [
+            "puppet://$server/puppet/cron.d/puppetd.${operatingsystem}",
+            "puppet://$server/puppet/cron.d/puppetd",
+        ],
+        owner => root, group => 0, mode => 0644;
+    }
 }

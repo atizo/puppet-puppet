@@ -1,15 +1,6 @@
-# Class: puppet::client::base::linux::gentoo
 #
 # This class inherits linux specific puppetclient configuration
 # and adds gentoo specific stuff
-#
-# Parameters:
-#
-# Actions:
-#
-# Requires:
-#
-# Sample Usage:
 #
 class puppet::client::base::linux::gentoo inherits puppet::client::base::linux {
     Package['puppet']{

@@ -1,14 +1,5 @@
-# Class: puppet::client::base::openbsd
 #
 # Inherits basic puppetclient configuration and overrides openbsd spcific settings.
-#
-# Parameters:
-#
-# Actions:
-#
-# Requires:
-#
-# Sample Usage:
 #
 class puppet::client::base::openbsd inherits puppet::client::base {
     Service['puppet']{

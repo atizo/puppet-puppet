@@ -1,15 +1,6 @@
-# Class: puppet::client::base::linux::centos
 #
 # This class inherits linux specific puppetclient configuration
 # and adds centos specific stuff
-#
-# Parameters:
-#
-# Actions:
-#
-# Requires:
-#
-# Sample Usage:
 #
 class puppet::client::base::linux::centos inherits puppet::client::base::linux {
     file{'/etc/sysconfig/puppet':
