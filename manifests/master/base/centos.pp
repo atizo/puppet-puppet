@@ -12,15 +12,12 @@
 # Sample Usage:
 #
 class puppet::master::base::centos inherits puppet::master::base {
+    if $puppet::master::dashboard {
+      $sysconfig_puppetmaster_extra_opts = "––reports puppet_dashboard"
+    }
     file{'/etc/sysconfig/puppetmaster':
-        source => [
-            "puppet://$server/site-puppet/sysconfig/${fqdn}/puppetmaster",
-            "puppet://$server/site-puppet/sysconfig/${domain}/puppetmaster",
-            "puppet://$server/site-puppet/sysconfig/puppetmaster",
-            "puppet://$server/puppet/sysconfig/puppetmaster",
-        ],
+        content => template('modules/puppet/sysconfig/puppetmaster.erb'),
         notify => Service['puppetmaster'],
         owner => root, group => 0, mode => 0644;
     }
 }
-
