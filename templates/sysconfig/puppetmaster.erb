@@ -30,7 +30,7 @@ PUPPETMASTER_LOG=<%= sysconfig_puppetmaster_log %>
 # Example with multiple ports which will start puppetmaster with mongrel
 # as a servertype
 <%- unless sysconfig_puppetmaster_ports.empty? %>
-PUPPETMASTER_PORTS=( <%= sysconfig_puppetmaster_ports ) %>
+PUPPETMASTER_PORTS=( <%= sysconfig_puppetmaster_ports %> )
 <%- else %>
 #PUPPETMASTER_PORTS=( 18140 18141 18142 18143 )
 <%- end %>
