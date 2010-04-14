@@ -33,10 +33,6 @@ define puppet::master::dashboard(
 #        content => template('modules/puppet/dashboard/database.yml'),
 #        require => Package['puppet-dashboard'],
 #    }
-#    file{'/usr/lib/ruby/site_ruby/1.8/puppet/reports/puppet_dashboard.rb':
-#        source => '/opt/puppet-dashboard/lib/puppet/puppet_dashboard.rb',
-#        require => Package['puppet-dashboard'],
-#    }
 #    service{'dashboard-webrick':
 #        provider => base,
 #        ensure => running,
