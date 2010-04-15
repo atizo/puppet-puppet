@@ -6,7 +6,7 @@ define puppet::master::dashboard(
     $db_name,
     $db_username,
     $db_password,
-    $root = '/opt/puppet-dashboard',
+    $root = '/opt/puppet-dashboard'
 ) {
     require git
     require rake
@@ -19,10 +19,10 @@ define puppet::master::dashboard(
         baseurl => "http://yum.puppetlabs.com/base/",
         enabled => 1,
         gpgcheck => 1,
-        gpgkey => "http://yum.puppetlabs.com/RPM-GPG-KEY-reductive"
+        gpgkey => "http://yum.puppetlabs.com/RPM-GPG-KEY-reductive",
         priority => 1,
     }
-    package{'puppet-dashboard'
+    package{'puppet-dashboard':
         ensure => installed,
     }
 #    exec{'rake install':
