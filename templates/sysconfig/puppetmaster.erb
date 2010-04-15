@@ -1,5 +1,5 @@
 # Location of the main manifest
-<%- unless has_variable?('sysconfig_puppetmaster_manifest') %>
+<%- if has_variable?('sysconfig_puppetmaster_manifest') %>
 PUPPETMASTER_MANIFEST=<%= sysconfig_puppetmaster_manifest %>
 <%- else %>
 #PUPPETMASTER_MANIFEST=/etc/puppet/manifests/site.pp
@@ -7,7 +7,7 @@ PUPPETMASTER_MANIFEST=<%= sysconfig_puppetmaster_manifest %>
 
 # Where to log general messages to.
 # Specify syslog to send log messages to the system log.
-<%- unless has_variable?('sysconfig_puppetmaster_log') %>
+<%- if has_variable?('sysconfig_puppetmaster_log') %>
 PUPPETMASTER_LOG=<%= sysconfig_puppetmaster_log %>
 <%- else %>
 #PUPPETMASTER_LOG=syslog
@@ -29,21 +29,21 @@ PUPPETMASTER_LOG=<%= sysconfig_puppetmaster_log %>
 #PUPPETMASTER_PORTS="8141"
 # Example with multiple ports which will start puppetmaster with mongrel
 # as a servertype
-<%- unless has_variable?('sysconfig_puppetmaster_ports') %>
+<%- if has_variable?('sysconfig_puppetmaster_ports') %>
 PUPPETMASTER_PORTS=( <%= sysconfig_puppetmaster_ports %> )
 <%- else %>
 #PUPPETMASTER_PORTS=( 18140 18141 18142 18143 )
 <%- end %>
 
 # You may specify an alternate pid directory.
-<%- unless has_variable?('sysconfig_puppetmaster_pid_dir') %>
+<%- if has_variable?('sysconfig_puppetmaster_pid_dir') %>
 PUPPETMASTER_PID_DIR=<%= sysconfig_puppetmaster_pid_dir %>
 <%- else %>
 #PUPPETMASTER_PID_DIR=/var/run/puppet
 <%- end %>
 
 # You may specify other parameters to the puppetmaster here
-<%- unless has_variable?('sysconfig_puppetmaster_extra_opts') %>
+<%- if has_variable?('sysconfig_puppetmaster_extra_opts') %>
 PUPPETMASTER_EXTRA_OPTS=<%= sysconfig_puppetmaster_extra_opts %>
 <%- else %>
 #PUPPETMASTER_EXTRA_OPTS=--noca
