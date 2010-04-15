@@ -16,7 +16,7 @@ class puppet::master::base::centos inherits puppet::master::base {
       $sysconfig_puppetmaster_extra_opts = "––reports puppet_dashboard"
     }
     file{'/etc/sysconfig/puppetmaster':
-        content => template('sysconfig/puppetmaster.erb'),
+        content => template('puppet/sysconfig/puppetmaster.erb'),
         notify => Service['puppetmaster'],
         owner => root, group => 0, mode => 0644;
     }
