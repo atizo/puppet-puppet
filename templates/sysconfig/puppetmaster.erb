@@ -1,5 +1,5 @@
 # Location of the main manifest
-<%- unless sysconfig_puppetmaster_manifest.empty? %>
+<%- unless sysconfig_puppetmaster_manifest %>
 PUPPETMASTER_MANIFEST=<%= sysconfig_puppetmaster_manifest %>
 <%- else %>
 #PUPPETMASTER_MANIFEST=/etc/puppet/manifests/site.pp
