@@ -1,6 +1,7 @@
 production:
   adapter: <%= db_adapter %>
   database: <%= db_name %>
+  hostname: <%= db_hostanme %>
   username: <%= db_username %>
   password: <%= db_password %>
   encoding: utf8

@@ -4,6 +4,7 @@
 define puppet::master::dashboard(
     $db_adapter = 'mysql',
     $db_name,
+    $db_hostbname,
     $db_username,
     $db_password,
     $root = '/opt/puppet-dashboard'
