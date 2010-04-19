@@ -11,7 +11,6 @@ define puppet::master::dashboard(
 ) {
     require git
     require rake
-    require rubygems::mysql
 
     $use_dashboard = true
 
