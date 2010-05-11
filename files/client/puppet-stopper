@@ -1,0 +1,190 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'optparse/time'
+require 'ftools'
+
+if ENV['USER'].nil? or ENV['USER'] != 'root'
+  puts "You have to run this programm as root"
+  exit
+end
+
+options = {}
+
+SECONDS_PER_DAY = (60 * 60 * 24 ) # One Day
+DEFAULT_LOCK_TIME = Time.now + SECONDS_PER_DAY 
+MOTD_BACKUP = '/etc/motd.puppetd-stopper.bck'
+PUPPETD_LOCK = '/var/lib/puppet/state/puppetdlock'
+PUPPETD_LOCK_INFO = '/etc/puppet/puppetd.lock.info'
+PUPPETD_UNLOCKTIME_INFO = '/etc/puppet/puppetd.unlocktime.info'
+PUPPETD_UNLOCK_JOB_INFO = '/etc/puppet/puppetd.unlock.job.info'
+
+optparse = OptionParser.new do|opts|
+  
+  opts.banner = "Usage: puppet-stopper [options]"
+
+  options[:lock] = nil
+  opts.on( '-l', '--lock [COMMENT]', String, 'Locks puppetd for 1 day (default).',
+       "Unlocks automaticly after 1 day." ) do |comment|
+
+    options[:lock] = comment
+  end
+
+  options[:unlock] = false
+  opts.on( '-u', '--unlock', 'Unlocks puppetd immediately' ) do
+    options[:unlock] = true
+  end
+
+  options[:extend] = false
+  opts.on( '-e', '--extend', 'Extends an existing lock. Default is 1 day' ) do
+    options[:extend] = true
+  end
+
+  options[:days] = DEFAULT_LOCK_TIME
+  opts.on( '-d', '--days [NUMBER]', Numeric, 'Locks or extend for n days [1-5]' ) do |days|
+     if days < 1 or days > 5
+       puts "Only between 1 and 5 days are possible"
+       exit
+     end
+     options[:days] = Time.now + ( SECONDS_PER_DAY * days )
+  end
+
+  options[:info] = false
+  opts.on( '-i', '--info', 'Print info about an existing lock' ) do
+    options[:info] = true
+  end
+
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+begin optparse.parse!
+rescue OptionParser::InvalidOption => e
+  puts e
+  puts
+  puts optparse
+  exit
+end
+
+
+def delete_at_job
+
+  job_id = File.new( PUPPETD_UNLOCK_JOB_INFO, 'r' ).read
+  %x[atrm #{job_id}]  
+
+  File.delete( PUPPETD_UNLOCKTIME_INFO )
+  File.delete( PUPPETD_UNLOCK_JOB_INFO )
+
+end
+
+def create_at_job time
+ 
+  File.new( PUPPETD_UNLOCKTIME_INFO, 'a' ) << time
+
+  at_time_string = time.strftime "%Y%m%d%H%M.%S"  
+
+  job = %x[echo "/root/puppet-stopper --unlock" | at -t #{at_time_string} 2>&1]
+
+  job_id = nil  
+  job.each do |line|
+    job_id = line.split[1] if line.include? 'job'
+  end
+
+  File.new( PUPPETD_UNLOCK_JOB_INFO, 'a' ) << job_id
+
+end
+
+def lock_exists?
+
+  return true if File.exists? PUPPETD_LOCK \
+      and File.exists? PUPPETD_LOCK_INFO \
+      and File.exists? PUPPETD_UNLOCK_JOB_INFO \
+      and File.exists? PUPPETD_UNLOCKTIME_INFO
+
+  return false
+
+end
+
+
+# Lock the puppetd
+if options[:lock]
+
+  if lock_exists?
+    puts "Puppet is already locked. Use 'puppet-stopper --info' to get more info"
+  
+  else
+    create_at_job options[:days]
+ 
+    %x[/sbin/service puppetd stop &> /dev/null]
+    %x[/usr/sbin/puppetd --disable]
+  
+    File.copy( '/etc/motd', MOTD_BACKUP )
+
+    motd = File.new( '/etc/motd', 'a' )
+    motd << "\nPuppet is locked on this host for the following reason:\n"
+    motd << "\"" + options[:lock] + "\"\n"
+
+    File.new( PUPPETD_LOCK_INFO, 'a' ) << options[:lock]
+
+    puts "Puppet is now locked and will automatically unlock on #{options[:days]}"
+
+  end
+  exit
+end
+
+# Unlock it
+if options[:unlock]
+
+  if lock_exists?
+    delete_at_job
+
+    %x[/usr/sbin/puppetd --enable]
+
+    File.move( MOTD_BACKUP, '/etc/motd' )
+    File.delete( PUPPETD_LOCK_INFO )
+
+    puts "Puppet is now unlocked"
+
+  else
+    puts "Puppet ist not locked"
+    
+  end
+  exit
+end
+
+# Extend the time for the automatic unlock
+if options[:extend]
+
+  if lock_exists?
+    delete_at_job
+    create_at_job options[:days]
+
+    puts "Unlock time extended. Puppet will automatically unlock on #{options[:days]}"
+  
+  else
+    puts "Puppet ist not locked"   
+
+  end
+  exit
+end
+
+# Info about current lock
+if options[:info]
+
+  if File.exists? PUPPETD_LOCK \
+      and File.exists? PUPPETD_LOCK_INFO \
+      and File.exists? PUPPETD_UNLOCKTIME_INFO
+    puts
+    puts "Reason : " + File.new( PUPPETD_LOCK_INFO, 'r' ).read
+    puts "Time of unlock: " + File.new( PUPPETD_UNLOCKTIME_INFO, 'r' ).read
+    puts
+  else
+    puts "Puppet ist not locked"
+
+  end
+  exit
+end
+
+puts optparse

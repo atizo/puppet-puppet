@@ -23,4 +23,9 @@ class puppet::client::base inherits puppet::base {
         ],
         owner => root, group => 0, mode => 0644;
     }
+
+    file{'/usr/local/sbin/puppet-stopper':
+        source => "puppet://$server/puppet/client/puppet-stopper",
+        owner => root, group => 0, mode => 0500;
+    }
 }
