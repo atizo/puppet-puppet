@@ -18,14 +18,14 @@ class puppet::client::base inherits puppet::base {
     # restart the client from time to time to avoid memory problems
     file{'/etc/cron.d/puppetd':
         source => [
-            "puppet://$server/puppet/cron.d/puppetd.${operatingsystem}",
-            "puppet://$server/puppet/cron.d/puppetd",
+            "puppet://$server/modules/puppet/cron.d/puppetd.${operatingsystem}",
+            "puppet://$server/modules/puppet/cron.d/puppetd",
         ],
         owner => root, group => 0, mode => 0644;
     }
 
     file{'/usr/local/sbin/puppet-stopper':
-        source => "puppet://$server/puppet/client/puppet-stopper",
+        source => "puppet://$server/modules/puppet/client/puppet-stopper",
         owner => root, group => 0, mode => 0500;
     }
 }

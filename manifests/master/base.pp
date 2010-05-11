@@ -26,16 +26,16 @@ class puppet::master::base inherits puppet::base{
     }
     File['puppet_config']{
         source => [
-            "puppet://$server/site-puppet/master/puppet.conf",
-            "puppet://$server/puppet/master/puppet.conf",
+            "puppet://$server/modules/site-puppet/master/puppet.conf",
+            "puppet://$server/modules/puppet/master/puppet.conf",
         ],
         #notify +> Service['puppetmaster'],
     }
     file{$puppet_fileserverconfig:
         source => [
-            "puppet://$server/site-puppet/master/${fqdn}/fileserver.conf",
-            "puppet://$server/site-puppet/master/fileserver.conf",
-            "puppet://$server/puppet/master/fileserver.conf",
+            "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
+            "puppet://$server/modules/site-puppet/master/fileserver.conf",
+            "puppet://$server/modules/puppet/master/fileserver.conf",
         ],
         notify => Service['puppetmaster'],
         owner => root, group => 0, mode => 644;
@@ -43,8 +43,8 @@ class puppet::master::base inherits puppet::base{
     # restart the master from time to time to avoid memory problems
     file{'/etc/cron.d/puppetmaster.cron':
         source => [
-            "puppet://$server/puppet/cron.d/puppetmaster.${operatingsystem}",
-            "puppet://$server/puppet/cron.d/puppetmaster",
+            "puppet://$server/modules/puppet/cron.d/puppetmaster.${operatingsystem}",
+            "puppet://$server/modules/puppet/cron.d/puppetmaster",
         ],
         owner => root, group => 0, mode => 0644;
     }

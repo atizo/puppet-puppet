@@ -16,11 +16,11 @@ class puppet::base {
     file{'puppet_config':
         path => "$puppet_config",
         source => [
-            "puppet://$server/site-puppet/client/${fqdn}/puppet.conf",
-            "puppet://$server/site-puppet/client/puppet.conf.$operatingsystem",
-            "puppet://$server/site-puppet/client/puppet.conf",
-            "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
-            "puppet://$server/puppet/client/puppet.conf"
+            "puppet://$server/modules/site-puppet/client/${fqdn}/puppet.conf",
+            "puppet://$server/modules/site-puppet/client/puppet.conf.$operatingsystem",
+            "puppet://$server/modules/site-puppet/client/puppet.conf",
+            "puppet://$server/modules/puppet/client/puppet.conf.$operatingsystem",
+            "puppet://$server/modules/puppet/client/puppet.conf"
         ],
         owner => root, group => 0, mode => 644;
     }
