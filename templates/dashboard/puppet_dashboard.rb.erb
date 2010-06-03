@@ -1,0 +1,15 @@
+require 'puppet'
+
+HOST = '<%= dashboard_vhost %>'
+PORT = 80
+
+Puppet::Reports.register_report(:puppet_dashboard) do
+  desc "Send report information to Puppet-Dashboard"
+
+  def process
+    Net::HTTP.start(HOST, PORT) do |conn|
+      conn.post "/reports", "report=" + CGI.escape(self.to_yaml)
+    end
+  end
+end
+

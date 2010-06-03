@@ -12,7 +12,7 @@
 # Sample Usage:
 #
 class puppet::master::base::centos inherits puppet::master::base {
-    if $puppet::master::dashboard {
+    if $puppet_enable_dashboard {
       $sysconfig_puppetmaster_extra_opts = "––reports puppet_dashboard"
     }
     file{'/etc/sysconfig/puppetmaster':

@@ -4,15 +4,14 @@
 define puppet::master::dashboard(
     $db_adapter = 'mysql',
     $db_name,
-    $db_hostname,
     $db_username,
     $db_password,
-    $root = '/opt/puppet-dashboard'
+    $dashboard_vhost,
+    $dashboard_vhost_options,
+    $ruby_mode = 'normal'
 ) {
-    require git
     require rake
-
-    $use_dashboard = true
+    require puppet::master
 
     yum::managed_yumrepo{'puppetlabs':
         descr => 'Puppet Labs Packages',
@@ -25,23 +24,53 @@ define puppet::master::dashboard(
     package{'puppet-dashboard':
         ensure => installed,
     }
-#    exec{'rake install':
-#        cwd => $root,
-#        refreshonly => true,
-#    }
-#    file{"$root/config/database.yml":
-#        content => template('modules/puppet/dashboard/database.yml'),
-#        require => Package['puppet-dashboard'],
-#    }
-#    service{'dashboard-webrick':
-#        provider => base,
-#        ensure => running,
-#        pattern => "ruby $root/script/server -d",
-#        start => "$root/script/server -d",
-#        stop => "kill -9 `ps x | grep 'ruby $root/script/server -d' | grep -v grep | awk '{print $1}'`",
-#        require => [
-#            File["$root/config/database.yml"],
-#            File['/usr/lib/ruby/site_ruby/1.8/puppet/reports/puppet_dashboard.rb'],
-#        ]
-#    }
+
+    file{'/usr/share/puppet-dashboard/config/database.yml':
+        content => template('puppet/dashboard/database.yml.erb'),
+        require => Package['puppet-dashboard'],
+        owner => puppet, group => 0, mode => 0400;
+    }
+
+    mysql_database{"$db_name":
+      ensure => present
+    }
+    mysql_user{"${db_username}@localhost":
+      ensure => present,
+      password_hash => mysql_password($db_password),
+      require => Mysql_database["$db_name"],
+    }
+    mysql_grant{"${db_username}@localhost/${db_name}":
+        privileges => "all",
+        require => [ Mysql_user["${db_username}@localhost"], Mysql_db[$db_name] ],
+    }
+    exec{'install_dashboard':
+        command => 'RAILS_ENV=production rake install',
+        cwd => '/usr/share/puppet-dashboard/',
+        unless => "echo 'show tables;' | mysql --user=${db_username} --password=${db_password} ${db_name} > /dev/null",
+        require => [ Mysql_grant["${db_username}@localhost/${db_name}"], File['/usr/share/puppet-dashboard/config/database.yml'] ],
+    }
+
+    file{'puppet_dashboard.rb':
+        content => template('puppet/dashboard/puppet_dashboard.rb.erb'),
+    }
+    if $ruby_mode == 'ree' {
+        require puppet::master::ree
+
+        Exec['install_dashboard']{
+            command => 'RAILS_ENV=production /opt/ruby-enterprise/bin/rake install'
+        }
+        File['puppet_dashboard.rb']{
+            path => "/opt/ruby-enterprise/lib/ruby/gems/1.8/gems/puppet-${puppetversion}/lib/puppet/reports/puppet_dashboard.rb"
+        }
+        require passenger::ree::apache        
+    } else {
+        File['puppet_dashboard.rb']{
+            path => '/usr/lib/ruby/site_ruby/1.8/puppet/reports/puppet_dashboard.rb',
+        }
+        require passenger::apache        
+    }
+
+    apache::vhost::file{$dashboard_vhost:
+        content => template('puppet/dashboard/apache_vhost.erb'),
+    }
 }

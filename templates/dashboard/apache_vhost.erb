@@ -1,0 +1,26 @@
+# we make a seperate for localhost
+# so puppet can always report
+<VirtualHost 127.0.0.1:80>
+    Include conf.d/defaults.inc
+
+    ServerName <%= dashboard_vhost %>
+    DocumentRoot /usr/share/puppet-dashboard/public/
+
+    <Directory /usr/share/puppet-dashboard/public/>
+        Allow from all
+        Options -MultiViews
+    </Directory>
+</VirtualHost>
+<VirtualHost *:80>
+    Include conf.d/defaults.inc
+
+    ServerName <%= dashboard_vhost %>
+    DocumentRoot /usr/share/puppet-dashboard/public/
+
+    <%= dashboard_vhost_options %>
+
+    <Directory /usr/share/puppet-dashboard/public/>
+        Allow from all
+        Options -MultiViews
+    </Directory>
+</VirtualHost>

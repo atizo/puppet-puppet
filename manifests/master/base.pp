@@ -16,6 +16,18 @@ class puppet::master::base inherits puppet::base{
     if ! $puppet_fileserverconfig {
         $puppet_fileserverconfig = '/etc/puppet/fileserver.conf'
     }
+    if $puppet_enable_dashboard {
+        if !$puppet_dashboard_db_password {
+            fail("You need to set \$puppet_dashboard_db_password if you want to use dashboard on $fqdn")
+        }
+        puppet::master::dashboard{$hostname:
+            db_name => 'dashboard',
+            db_username => 'dashboard',
+            db_password => $puppet_dashboard_db_password,
+            dashboard_vhost => $puppet_dashboard_vhost,
+            dashboard_vhost_options => $puppet_dashboard_vhost_options,
+        }
+    }
     package{'puppet-server':
         ensure => present,
     }
