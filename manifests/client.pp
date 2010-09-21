@@ -14,20 +14,20 @@
 #
 
 class puppet::client {
-    case $kernel {
-        linux: {
-            case $operatingsystem {
-                gentoo:  { include puppet::client::base::linux::gentoo }
-                centos:  { include puppet::client::base::linux::centos }
-                debian:  { include puppet::client::base::linux::debian }
-                default: { include puppet::client::base::linux }
-            }
-        }
-        openbsd: { include puppet::client::base::openbsd }
-        default: { include puppet::client::base }
+  case $kernel {
+    linux: {
+      case $operatingsystem {
+        gentoo:  { include puppet::client::base::linux::gentoo }
+        centos:  { include puppet::client::base::linux::centos }
+        debian:  { include puppet::client::base::linux::debian }
+        default: { include puppet::client::base::linux }
+      }
     }
-    if $use_shorewall {
-      include shorewall::rules::out::puppet
-    }
+    openbsd: { include puppet::client::base::openbsd }
+    default: { include puppet::client::base }
+  }
+  if $use_shorewall {
+    include shorewall::rules::out::puppet
+  }
 }
 

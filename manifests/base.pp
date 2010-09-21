@@ -10,19 +10,19 @@
 # Sample Usage:
 #  
 class puppet::base {
-    if ! $puppet_config {
-        $puppet_config = '/etc/puppet/puppet.conf'
-    }
-    file{'puppet_config':
-        path => "$puppet_config",
-        source => [
-            "puppet://$server/modules/site-puppet/client/${fqdn}/puppet.conf",
-            "puppet://$server/modules/site-puppet/client/puppet.conf.$operatingsystem",
-            "puppet://$server/modules/site-puppet/client/puppet.conf",
-            "puppet://$server/modules/puppet/client/puppet.conf.$operatingsystem",
-            "puppet://$server/modules/puppet/client/puppet.conf"
-        ],
-        owner => root, group => 0, mode => 644;
-    }
+  if ! $puppet_config {
+    $puppet_config = '/etc/puppet/puppet.conf'
+  }
+  file{'puppet_config':
+    path => "$puppet_config",
+    source => [
+      "puppet:///modules/site-puppet/client/${fqdn}/puppet.conf",
+      "puppet:///modules/site-puppet/client/puppet.conf.$operatingsystem",
+      "puppet:///modules/site-puppet/client/puppet.conf",
+      "puppet:///modules/puppet/client/puppet.conf.$operatingsystem",
+      "puppet:///modules/puppet/client/puppet.conf"
+    ],
+    owner => root, group => 0, mode => 644;
+  }
 }
 

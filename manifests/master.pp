@@ -14,12 +14,12 @@
 # Sample Usage:
 #  
 class puppet::master {
-    case $operatingsystem {
-        centos: { include puppet::master::base::centos }
-        default: { include puppet::master::base }
-    }
-    if $use_shorewall {
-        include shorewall::rules::puppet::master
-    }
+  case $operatingsystem {
+    centos: { include puppet::master::base::centos }
+    default: { include puppet::master::base }
+  }
+  if $use_shorewall {
+    include shorewall::rules::puppet::master
+  }
 }
 

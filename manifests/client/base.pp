@@ -4,28 +4,28 @@
 # Do not include this class directly.
 #
 class puppet::client::base inherits puppet::base {
-    include puppet::base
-    service{'puppet':
-        ensure => running,
-        enable => true,
-        hasstatus => true,
-        hasrestart => true,
-        pattern => puppetd,
-    }
-    File['puppet_config']{
-        notify => Service['puppet'],
-    }
-    # restart the client from time to time to avoid memory problems
-    file{'/etc/cron.d/puppetd':
-        source => [
-            "puppet://$server/modules/puppet/cron.d/puppetd.${operatingsystem}",
-            "puppet://$server/modules/puppet/cron.d/puppetd",
-        ],
-        owner => root, group => 0, mode => 0644;
-    }
+  include puppet::base
+  service{'puppet':
+    ensure => running,
+    enable => true,
+    hasstatus => true,
+    hasrestart => true,
+    pattern => puppetd,
+  }
+  File['puppet_config']{
+    notify => Service['puppet'],
+  }
+  # restart the client from time to time to avoid memory problems
+  file{'/etc/cron.d/puppetd':
+    source => [
+      "puppet:///modules/puppet/cron.d/puppetd.${operatingsystem}",
+      "puppet:///modules/puppet/cron.d/puppetd",
+    ],
+    owner => root, group => 0, mode => 0644;
+  }
 
-    file{'/usr/local/sbin/puppet-stopper':
-        source => "puppet://$server/modules/puppet/client/puppet-stopper",
-        owner => root, group => 0, mode => 0500;
-    }
+  file{'/usr/local/sbin/puppet-stopper':
+    source => "puppet:///modules/puppet/client/puppet-stopper",
+    owner => root, group => 0, mode => 0500;
+  }
 }
