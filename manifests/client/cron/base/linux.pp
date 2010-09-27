@@ -2,7 +2,7 @@
 # This class includes plattform independend configuration and
 # adds linux specific stuff
 #
-class puppet::client::cron::base::linux {
+class puppet::client::cron::base::linux inherits puppet::client::linux {
   include puppet::client::cron::base
 
   if !$puppet_crontime {
