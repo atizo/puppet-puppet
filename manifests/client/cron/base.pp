@@ -3,8 +3,9 @@
 #
 class puppet::client::cron::base inherits puppet::client::base {
   Service['puppet']{
+    ensure => stopped,
     enable => false,
-    hasstatus => false,
+    hasstatus => true,
   }
   exec{'stop_puppet':
     command => 'kill `cat /var/run/puppet/puppetd.pid`',

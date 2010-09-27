@@ -4,7 +4,14 @@
 #
 class puppet::client::cron::base::linux {
   include puppet::client::cron::base
-  File{'/etc/cron.d/puppetd':
-    content => "0,30 * * * * root /usr/sbin/puppetd --onetime --no-daemonize --splay --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'\n",
+
+  if !$puppet_crontime {
+    $puppet_crontime_interval_minute = fqdn_rand(29)
+    $puppet_crontime_interval_minute2 = inline_template('<%= 30+puppet_crontime_interval_minute.to_i %>')
+    $puppet_crontime = "${puppet_crontime_interval_minute},${puppet_crontime_interval_minute2} * * * *"
+  }
+
+  File['/etc/cron.d/puppetd']{
+    content => "$puppet_crontime root /usr/sbin/puppetd --onetime --no-daemonize --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'\n",
   }
 }
