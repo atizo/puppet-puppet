@@ -5,7 +5,7 @@
 # os specific implementation of puppets cron.
 # This is an optional featurs for a puppet client.
 #
-class puppet::client::cron inherits puppet::client::base {
+class puppet::client::cron inherits puppet::client {
   require cron
   case $kernel {
     linux: { include puppet::client::cron::base::linux }
