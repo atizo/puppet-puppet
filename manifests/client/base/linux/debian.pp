@@ -13,9 +13,5 @@ class puppet::client::base::linux::debian inherits puppet::client::base::linux {
     notify => Service['puppet'],
     owner => root, group => 0, mode => 0644;
   }
-  # there is really no status cmd for it
-  Service['puppet']{
-    hasstatus => false,
-  }
 }
 

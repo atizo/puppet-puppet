@@ -36,13 +36,6 @@ class puppet::master::base inherits puppet::base{
     enable => true,
     require => Package['puppet'],
   }
-  File['puppet_config']{
-    source => [
-      "puppet:///modules/site-puppet/master/puppet.conf",
-      "puppet:///modules/puppet/master/puppet.conf",
-    ],
-    #notify +> Service['puppetmaster'],
-  }
   file{$puppet_fileserverconfig:
     source => [
       "puppet:///modules/site-puppet/master/${fqdn}/fileserver.conf",

@@ -3,17 +3,13 @@
 # It also inherits puppet's base functionality (puppet::base)
 # Do not include this class directly.
 #
-class puppet::client::base inherits puppet::base {
+class puppet::client::base {
   include puppet::base
   service{'puppet':
     ensure => running,
     enable => true,
     hasstatus => true,
     hasrestart => true,
-    pattern => puppetd,
-  }
-  File['puppet_config']{
-    notify => Service['puppet'],
   }
   # restart the client from time to time to avoid memory problems
   file{'/etc/cron.d/puppetd':

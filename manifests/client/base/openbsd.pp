@@ -8,6 +8,7 @@ class puppet::client::base::openbsd inherits puppet::client::base {
     start => '/usr/local/bin/puppetd',
     hasstatus => false,
     hasrestart => false,
+    pattern => 'puppet agent',
   }
   openbsd::rc_local{'puppetd':
     binary => '/usr/local/bin/puppetd',

@@ -14,6 +14,8 @@
 # Sample Usage:
 #  
 class puppet::master {
+  include puppet::client
+  include puppet::master::client
   case $operatingsystem {
     centos: { include puppet::master::base::centos }
     default: { include puppet::master::base }

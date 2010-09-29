@@ -9,9 +9,5 @@ class puppet::client::base::linux::gentoo inherits puppet::client::base::linux {
   Package['facter']{
     category => 'dev-ruby',
   }
-  # as we use sometimes the init script to test
-  Service['puppet']{
-    hasstatus => false,
-  }
 }
 
