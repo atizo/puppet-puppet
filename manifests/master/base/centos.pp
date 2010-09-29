@@ -11,7 +11,8 @@
 #
 # Sample Usage:
 #
-class puppet::master::base::centos inherits puppet::master::base {
+class puppet::master::base::centos {
+  include puppet::master::base
   if $puppet_enable_dashboard {
     $sysconfig_puppetmaster_extra_opts = "--reports puppet_dashboard"
   }

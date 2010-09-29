@@ -10,7 +10,6 @@ class puppet::master::base::ree inherits puppet::master::base {
     }
   }
 
-
   Package['puppet-server']{
     ensure => absent,
   }
