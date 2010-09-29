@@ -3,12 +3,12 @@ Listen 8140
 
     SSLEngine on
     SSLCipherSuite SSLv2:-LOW:-EXPORT:RC4+RSA
-    SSLCertificateFile      /var/lib/puppet/ssl/certs/<%= puppet_master_certname %>.pem
-    SSLCertificateKeyFile   /var/lib/puppet/ssl/private_keys/<%= puppet_master_certname %>.pem
-    SSLCertificateChainFile /var/lib/puppet/ssl/ca/ca_crt.pem
-    SSLCACertificateFile    /var/lib/puppet/ssl/ca/ca_crt.pem
+    SSLCertificateFile      /etc/puppet/ssl/certs/<%= puppet_master_certname %>.pem
+    SSLCertificateKeyFile   /etc/puppet/ssl/private_keys/<%= puppet_master_certname %>.pem
+    SSLCertificateChainFile /etc/puppet/ssl/ca/ca_crt.pem
+    SSLCACertificateFile    /etc/puppet/ssl/ca/ca_crt.pem
     # CRL checking should be enabled; if you have problems with Apache complaining about the CRL, disable the next line
-    SSLCARevocationFile     /var/lib/puppet/ssl/ca/ca_crl.pem
+    SSLCARevocationFile     /etc/puppet/ssl/ca/ca_crl.pem
     SSLVerifyClient optional
     SSLVerifyDepth  1
     SSLOptions +StdEnvVars
