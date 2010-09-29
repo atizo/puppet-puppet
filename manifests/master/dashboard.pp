@@ -41,7 +41,7 @@ define puppet::master::dashboard(
   }
   mysql_grant{"${db_username}@localhost/${db_name}":
     privileges => "all",
-    require => [ Mysql_user["${db_username}@localhost"], Mysql_db[$db_name] ],
+    require => [ Mysql_user["${db_username}@localhost"], Mysql_database[$db_name] ],
   }
   exec{'install_dashboard':
     cwd => '/usr/share/puppet-dashboard/',
