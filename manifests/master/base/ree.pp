@@ -39,7 +39,7 @@ class puppet::master::base::ree inherits puppet::master::base {
   }
   file{'/usr/share/puppet/rack/puppetmasterd/tmp':
     ensure => directory,
-    owner => puzzle, group => 0, mode => 0644;
+    owner => puppet, group => 0, mode => 0644;
   }
 
   file{'/usr/share/puppet/rack/puppetmasterd/config.ru':
