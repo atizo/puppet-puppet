@@ -44,7 +44,6 @@ define puppet::master::dashboard(
     require => [ Mysql_user["${db_username}@localhost"], Mysql_db[$db_name] ],
   }
   exec{'install_dashboard':
-    command => 'RAILS_ENV=production rake install',
     cwd => '/usr/share/puppet-dashboard/',
     unless => "echo 'show tables;' | mysql --user=${db_username} --password=${db_password} ${db_name} > /dev/null",
     require => [ Mysql_grant["${db_username}@localhost/${db_name}"], File['/usr/share/puppet-dashboard/config/database.yml'] ],
@@ -64,11 +63,14 @@ define puppet::master::dashboard(
     }
     require passenger::ree::apache    
   } else {
+    Exec['install_dashboard']{
+      command => 'RAILS_ENV=production rake install',
+    }
     File['puppet_dashboard.rb']{
       path => '/usr/lib/ruby/site_ruby/1.8/puppet/reports/puppet_dashboard.rb',
     }
     require passenger::apache    
-  }
+  } 
 
   apache::vhost::file{$dashboard_vhost:
     content => template('puppet/dashboard/apache_vhost.erb'),
