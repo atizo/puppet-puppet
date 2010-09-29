@@ -1,7 +1,6 @@
 # Class: puppet::master::base.pp
 #
 # This is an abstract class which holds basic puppetmaster resources.
-# It adds server functionality from the puppet:base.pp class
 # It is plattform independent.  
 #
 # Parameters:
@@ -12,7 +11,7 @@
 #
 # Sample Usage:
 #
-class puppet::master::base inherits puppet::base{
+class puppet::master::base {
   if ! $puppet_fileserverconfig {
     $puppet_fileserverconfig = '/etc/puppet/fileserver.conf'
   }
