@@ -16,7 +16,7 @@
     pluginsource = puppet:///plugins
     factpath = $vardir/lib/facter
 
-[puppetd]
+[agent]
      # The file in which puppetd stores a list of the classes
      # associated with the retrieved configuratiion.  Can be loaded in
      # the separate ``puppet`` executable using the ``--loadclasses``
