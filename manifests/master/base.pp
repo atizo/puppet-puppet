@@ -37,6 +37,11 @@ class puppet::master::base {
         db_host => $puppet_dashboard_db_host
       }
     }
+    if $puppet_dashboard_create_db != undef {
+      Puppet::Master::Dashboard[$hostname]{
+        create_db => $puppet_dashboard_create_db,
+      }
+    }
   }
   package{'puppet-server':
     ensure => present,
