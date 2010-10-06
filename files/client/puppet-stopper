@@ -72,7 +72,7 @@ end
 def delete_at_job
 
   job_id = File.new( PUPPETD_UNLOCK_JOB_INFO, 'r' ).read
-  %x[atrm #{job_id}]  
+  %x{atrm #{job_id}}
 
   File.delete( PUPPETD_UNLOCKTIME_INFO )
   File.delete( PUPPETD_UNLOCK_JOB_INFO )
@@ -85,7 +85,7 @@ def create_at_job time
 
   at_time_string = time.strftime "%Y%m%d%H%M.%S"  
 
-  job = %x[echo "/root/puppet-stopper --unlock" | at -t #{at_time_string} 2>&1]
+  job = %x{echo "puppet-stopper --unlock" | at -t #{at_time_string} 2>&1}
 
   job_id = nil  
   job.each do |line|
@@ -117,8 +117,8 @@ if options[:lock]
   else
     create_at_job options[:days]
  
-    %x[/sbin/service puppetd stop &> /dev/null]
-    %x[/usr/sbin/puppetd --disable]
+    %x{service puppetd stop &> /dev/null}
+    %x{puppet agent --disable}
   
     File.copy( '/etc/motd', MOTD_BACKUP )
 
@@ -140,7 +140,7 @@ if options[:unlock]
   if lock_exists?
     delete_at_job
 
-    %x[/usr/sbin/puppetd --enable]
+    %x{puppet agent --enable}
 
     File.move( MOTD_BACKUP, '/etc/motd' )
     File.delete( PUPPETD_LOCK_INFO )
