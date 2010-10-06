@@ -20,11 +20,22 @@ class puppet::master::base {
       fail("You need to set \$puppet_dashboard_db_password if you want to use dashboard on $fqdn")
     }
     puppet::master::dashboard{$hostname:
-      db_name => 'dashboard',
-      db_username => 'dashboard',
+      db_name => $puppet_dashboard_db_name ? {
+                    undef => 'dashboard',
+                    default => $puppet_dashboard_db_name
+      },
+      db_username => $puppet_dashboard_db_username ? {
+                    undef => 'dashboard',
+                    default => $puppet_dashboard_db_username
+      },
       db_password => $puppet_dashboard_db_password,
       dashboard_vhost => $puppet_dashboard_vhost,
       dashboard_vhost_options => $puppet_dashboard_vhost_options,
+    }
+    if $puppet_dashboard_db_host {
+      Puppet::Master::Dashboard[$hostname]{
+        db_host => $puppet_dashboard_db_host
+      }
     }
   }
   package{'puppet-server':
