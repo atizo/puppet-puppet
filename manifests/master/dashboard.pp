@@ -6,6 +6,8 @@ define puppet::master::dashboard(
   $db_name,
   $db_username,
   $db_password,
+  $db_host = 'localhost',
+  $create_db = true,
   $dashboard_vhost,
   $dashboard_vhost_options,
   $ruby_mode = 'normal'
@@ -31,22 +33,30 @@ define puppet::master::dashboard(
     owner => puppet, group => 0, mode => 0400;
   }
 
-  mysql_database{"$db_name":
-    ensure => present
-  }
-  mysql_user{"${db_username}@localhost":
-    ensure => present,
-    password_hash => mysql_password($db_password),
-    require => Mysql_database["$db_name"],
-  }
-  mysql_grant{"${db_username}@localhost/${db_name}":
-    privileges => "all",
-    require => [ Mysql_user["${db_username}@localhost"], Mysql_database[$db_name] ],
+  if $create_db {
+    mysql_database{"$db_name":
+      ensure => present
+    }
+    mysql_user{"${db_username}@localhost":
+      ensure => present,
+      password_hash => mysql_password($db_password),
+      require => Mysql_database["$db_name"],
+    }
+    mysql_grant{"${db_username}@localhost/${db_name}":
+      privileges => "all",
+      require => [ Mysql_user["${db_username}@localhost"], Mysql_database[$db_name] ],
+    }
   }
   exec{'install_dashboard':
     cwd => '/usr/share/puppet-dashboard/',
-    unless => "echo 'show tables;' | mysql --user=${db_username} --password=${db_password} ${db_name} > /dev/null",
-    require => [ Mysql_grant["${db_username}@localhost/${db_name}"], File['/usr/share/puppet-dashboard/config/database.yml'] ],
+    unless => "echo 'show tables;' | mysql --host=${db_host} --user=${db_username} --password=${db_password} ${db_name} > /dev/null",
+    require => [ File['/usr/share/puppet-dashboard/config/database.yml'] ],
+  }
+
+  if $create_db {
+    Exec['install_dashboard']{
+      require +> Mysql_grant["${db_username}@localhost/${db_name}"],
+    }
   }
 
   file{'puppet_dashboard.rb':
