@@ -30,7 +30,7 @@ define puppet::master::dashboard(
   file{'/usr/share/puppet-dashboard/config/database.yml':
     content => template('puppet/dashboard/database.yml.erb'),
     require => Package['puppet-dashboard'],
-    owner => puppet, group => 0, mode => 0400;
+    owner => 'puppet-dashboard', group => 0, mode => 0400;
   }
 
   if $create_db {
