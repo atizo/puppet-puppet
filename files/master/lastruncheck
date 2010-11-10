@@ -126,7 +126,7 @@ end
 module Puppet::Lastcheck::Reports::Nagios
   def deliver_report_to_nagios(failing_hosts)
     unless failing_hosts.empty?
-      puts "PUPPETLAST CRITICAL: #{failing_hosts.size} outdated hosts"
+      puts "PUPPETLAST CRITICAL: #{failing_hosts.size} outdated hosts: #{failing_hosts.keys.join(',')}"
       2
     else
       puts "PUPPETLAST OK: No outdated hosts"
