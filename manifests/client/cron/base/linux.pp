@@ -13,6 +13,7 @@ class puppet::client::cron::base::linux inherits puppet::client::base::linux {
 
   File['/etc/cron.d/puppetd']{
     source => undef,
+    before => Service['puppet'],
     content => "$puppet_crontime root /usr/sbin/puppetd --onetime --no-daemonize --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'\n",
   }
 }
