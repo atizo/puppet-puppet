@@ -21,12 +21,12 @@ class puppet::master::base {
     }
     puppet::master::dashboard{$hostname:
       db_name => $puppet_dashboard_db_name ? {
-                    undef => 'dashboard',
-                    default => $puppet_dashboard_db_name
+        undef => 'dashboard',
+        default => $puppet_dashboard_db_name
       },
       db_username => $puppet_dashboard_db_username ? {
-                    undef => 'dashboard',
-                    default => $puppet_dashboard_db_username
+        undef => 'dashboard',
+        default => $puppet_dashboard_db_username
       },
       db_password => $puppet_dashboard_db_password,
       dashboard_vhost => $puppet_dashboard_vhost,
@@ -42,6 +42,8 @@ class puppet::master::base {
         create_db => $puppet_dashboard_create_db,
       }
     }
+  } else {
+    $puppet_enable_dashboard = false
   }
   package{'puppet-server':
     ensure => present,

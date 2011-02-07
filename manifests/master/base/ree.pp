@@ -3,6 +3,7 @@
 class puppet::master::base::ree inherits puppet::master::base {
   require ruby-enterprise
   require passenger::ree::apache
+  require apache::ssl
 
   if $puppet_enable_dashboard {
     Puppet::Master::Dashboard[$hostname]{
@@ -25,7 +26,8 @@ class puppet::master::base::ree inherits puppet::master::base {
 
   ruby-enterprise::gem{'puppet': }
   if $puppet_use_storedconfigs {
-    ruby-enterprise::gem{ [ 'rails', 'mysql']: }
+    require mysql::devel
+    ruby-enterprise::gem{[ 'rails', 'mysql' ]:}
   }
 
   if !$puppet_master_certname {
