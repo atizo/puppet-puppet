@@ -18,7 +18,7 @@ class puppet::master::base::centos {
   }
   file{'/etc/sysconfig/puppetmaster':
     content => template('puppet/sysconfig/puppetmaster.erb'),
-    notify => Service['puppetmaster'],
+    #notify => Service['puppetmaster'],
     owner => root, group => 0, mode => 0644;
   }
 }

@@ -59,7 +59,7 @@ class puppet::master::base {
       "puppet:///modules/site-puppet/master/fileserver.conf",
       "puppet:///modules/puppet/master/fileserver.conf",
     ],
-    notify => Service['puppetmaster'],
+    #notify => Service['puppetmaster'],
     owner => root, group => 0, mode => 644;
   }
   # restart the master from time to time to avoid memory problems

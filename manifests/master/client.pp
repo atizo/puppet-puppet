@@ -4,6 +4,6 @@ class puppet::master::client inherits puppet::client::base {
       "puppet:///modules/site-puppet/master/puppet.conf",
       "puppet:///modules/puppet/master/puppet.conf",
     ],
-    notify => Service['puppetmaster'],
+    #notify => Service['puppetmaster'],
   }
 }
