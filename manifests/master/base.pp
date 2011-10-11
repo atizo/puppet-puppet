@@ -48,11 +48,11 @@ class puppet::master::base {
   package{'puppet-server':
     ensure => present,
   }
-  service{'puppetmaster':
-    ensure => running,
-    enable => true,
-    require => Package['puppet'],
-  }
+  #service{'puppetmaster':
+  #  ensure => running,
+  #  enable => true,
+  #  require => Package['puppet'],
+  #}
   file{$puppet_fileserverconfig:
     source => [
       "puppet:///modules/site-puppet/master/${fqdn}/fileserver.conf",
