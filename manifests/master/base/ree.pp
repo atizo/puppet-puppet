@@ -14,6 +14,13 @@ class puppet::master::base::ree inherits puppet::master::base {
   Package['puppet-server']{
     ensure => absent,
   }
+  Service['puppetmaster']{
+    ensure => stopped,
+    enable => false,
+    before => Package['puppet-server'],
+    require => undef
+    hasstatus => false,
+  }
   File['/etc/cron.d/puppetmaster.cron']{
     ensure => absent,
   }
